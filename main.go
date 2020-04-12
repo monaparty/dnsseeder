@@ -32,6 +32,7 @@ type configData struct {
 	uptime     time.Time             // application start time
 	port       string                // port for the dns server to listen on
 	http       string                // port for the web server to listen on
+  host       string                // host for the web server to linten on
 	version    string                // application version
 	seeders    map[string]*dnsseeder // holds a pointer to all the current seeders
 	smtx       sync.RWMutex          // protect the seeders map
@@ -56,6 +57,7 @@ func main() {
 	flag.StringVar(&netfile, "netfile", "", "List of json config files to load")
 	flag.StringVar(&config.port, "p", "8053", "DNS Port to listen on")
 	flag.StringVar(&config.http, "w", "", "Web Port to listen on. No port specified & no web server running")
+	flag.StringVar(&config.host, "b", "127.0.0.1", "Web address to listen on. Use with `-w` option")
 	flag.BoolVar(&j, "j", false, "Write network template file (dnsseeder.json) and exit")
 	flag.BoolVar(&config.verbose, "v", false, "Display verbose output")
 	flag.BoolVar(&config.debug, "d", false, "Display debug output")
@@ -109,7 +111,7 @@ func main() {
 
 	// start the web interface if we want it running
 	if config.http != "" {
-		go startHTTP(config.http)
+		go startHTTP(config.host, config.http)
 	}
 
 	// start dns server

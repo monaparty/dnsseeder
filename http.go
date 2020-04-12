@@ -11,7 +11,7 @@ import (
 
 // startHTTP runs in a goroutine and provides the web interface
 // to the dnsseeder
-func startHTTP(port string) {
+func startHTTP(host string, port string) {
 
 	http.HandleFunc("/dns", dnsWebHandler)
 	http.HandleFunc("/node", nodeHandler)
@@ -22,7 +22,7 @@ func startHTTP(port string) {
 	http.HandleFunc("/summary", summaryHandler)
 	http.HandleFunc("/", emptyHandler)
 	// listen only on localhost
-	err := http.ListenAndServe("127.0.0.1:"+port, nil)
+	err := http.ListenAndServe(host+":"+port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
